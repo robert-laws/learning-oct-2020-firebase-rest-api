@@ -56,6 +56,34 @@ app.get('/api/read/:id', (req, res) => {
   })();
 });
 
+app.get('/api/read', (req, res) => {
+  (async () => {
+    try {
+      let query = db.collection('products');
+      let response = [];
+
+      await query.get().then((querySnapshot) => {
+        let docs = querySnapshot.docs; // the result of the query
+        for (let doc of docs) {
+          const selectedItem = {
+            id: doc.id,
+            name: doc.data().name,
+            description: doc.data().description,
+            price: doc.data().price,
+          };
+
+          response.push(selectedItem);
+        }
+        return response; // each then should return a value
+      });
+      return res.status(200).send(response);
+    } catch (error) {
+      console.log(error);
+      return res.send(500).send(error);
+    }
+  })();
+});
+
 // Update - PUT
 
 // Delete - DELETE
