@@ -41,6 +41,20 @@ app.post('/api/create', (req, res) => {
 });
 
 // Read - GET
+app.get('/api/read/:id', (req, res) => {
+  (async () => {
+    try {
+      const document = db.collection('products').doc(req.params.id);
+      let product = await document.get();
+      let response = product.data();
+
+      return res.status(200).send(response);
+    } catch (error) {
+      console.log(error);
+      return res.send(500).send(error);
+    }
+  })();
+});
 
 // Update - PUT
 
